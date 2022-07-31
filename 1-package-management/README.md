@@ -1,5 +1,5 @@
 
-# Package Management
+# 📦 Package Management
 
 This tutorial explains how to create a python package which can be uploaded to
 [pypi].
@@ -8,15 +8,18 @@ This tutorial explains how to create a python package which can be uploaded to
 
 There are multiple ways how to create and manage python packages.
 It is important to know that this topic is not just about deploying a package.
-It is also about managing the package which includes a professional
-development environment.
+It is also about managing the development environment.
 
-- Develop in a python virtual environment
-  - Higher level of reproducibility
-  - Avoids dependency version issues with other projects of yours
-  - Ensures your development and automated testing setup are identical which
-    greatly helps with debugging
-- Build and upload the package to [pypi]
+Why are they closely interconnected?
+
+Because during development we want to have:
+
+- A clean and identical development environment
+  for every developer
+- Everyone installing the package to have the same dependencies
+  so debugging is easier
+- Ensure automated testing also uses the same environment
+- Build and upload the package with well-defined dependencies
 
 Consequently, the development environment and package management are closely
 connected.
@@ -30,23 +33,24 @@ following solutions:
 - ...
 
 They all were created to manage certain aspects of a package and some can do
-more than others. To put the discussion short here is a direct and brief advice:
+more than others and some also rely on each other.
+To avoid a lengthy factual discussion, here is a direct and brief advice:
 
 - By default use poetry
 - Use conda if your package also depends on certain binaries (e.g. Intel MKL)
 
 ## Poetry
 
-### Why Poetry?
-
-Why is Poetry a default choice?
+### Why is Poetry a default choice?
 
 - Modern and easy to use
-- Automatic virtual environment creation for the repository directory
-Built-in dependency installer and updater
-- A package lockfile ensures all users have the same dependencies installed
-- Can upload to pypi
-- Fast enough to be used as a development environment
+- Creates automatically a virtual environment for the repository directory
+- Has a built-in dependency installer and updater
+- Provides a package lockfile to ensure all users have the same
+  dependencies installed
+- Can build and upload the package to pypi
+- It is fast enough to be used as a development environment
+  (some can be slow)
 
 This guide will focus on poetry alone from now as it covers the majority of
 use-cases.
@@ -58,31 +62,36 @@ all questions.
 Don't worry you can modify anything later.
 This will create a `pyproject.toml`.
 This famous file configures almost your entire project later on
-including linting settings as you will see.
+including linting as you will see.
+We will call the new package `deathstar`.
 
 ### First code
 
-We will add a directory called `deathstar` containing a legendary
-`__init__.py` file to mark it as a package and another file
-under `deathstar/laser.py` containing the function:
+After running `poetry init`, we will add a directory called
+`deathstar` containing a legendary `__init__.py` file to mark
+it as a package.
+Beside it, we create another file `deathstar/laser.py` containing
+the function:
 
 ```python
 def fire(planet: str):
     print(f"Firing laser at '{planet}'")
 ```
 
-This function will serve as an example function we want to expose.
+In the following we want to expose this function as our libraries
+functionality.
 
 ### Adding packages
 
 Since the output is a boring print statement, we will add the
-package `rich` which can print text with colors in terminals:
+package `rich` which can print text with colors in terminals.
+To do so we run:
 
 ```python
 poetry add rich
 ```
 
-Yielding the output:
+which yields the output
 
 ```bash
 Creating virtualenv deathstar-nPBsZxp8-py3.9 in /home/codie/.cache/pypoetry/virtualenvs
@@ -157,7 +166,7 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'rich'
 ```
 
-This is because the main python environment does not have rich installed.
+This is because your main python environment does not have rich installed.
 To fix this we need to run the python of the virtual environment
 which poetry created for us through:
 
@@ -174,7 +183,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 Everything that you want to run in the virtual environment requires
 `poetry run`.
-To ease this you can also use `poetry shell` to get a shell in the
+To avoid typing, you can also use `poetry shell` to get a shell in the
 virtual environment and then simply run e.g. `python`.
 
 ### Development Dependencies
@@ -221,12 +230,15 @@ poetry config pypi-token.test-pypi  pypi-XXXXXXXXXXXXXXX
 poetry publish --build -r test-pypi
 ```
 
-For a production release set the token for the main pypi instance:
+For a production release set the token for the main pypi instance
+and remove the test-pypi reference.
 
 ```bash
 poetry config pypi-token.pypi pypi-XXXXXXXX
 poetry publish --build
 ```
+
+Congratulations 🥳 your package manager is all set up.
 
 [pipenv]: https://github.com/pypa/pipenv
 [pypi]: https://pypi.org/
