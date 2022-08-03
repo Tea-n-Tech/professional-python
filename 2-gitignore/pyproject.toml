@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "deathstar"
+version = "0.1.0"
+description = "This python package allows running the deathstar"
+authors = ["Lord Vader <darth.vader@galactic-empire.star>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+rich = "^12.5.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
