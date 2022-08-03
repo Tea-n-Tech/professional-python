@@ -19,3 +19,5 @@ Topics:
 - [ ] Inbetween the lines
 - [ ] Pull Requests
 - [ ] Command Line Interfaces (CLI)
+- [ ] Changelog and commit messages
+- [ ] Licenses
