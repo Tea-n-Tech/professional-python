@@ -21,5 +21,4 @@ Topics:
 - [ ] Command Line Interfaces (CLI)
 - [ ] Changelog and commit messages
 - [ ] Licenses
-- [ ] Pre-commit hooks 
-
+- [ ] Pre-commit hooks
