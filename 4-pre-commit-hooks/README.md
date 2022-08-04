@@ -49,7 +49,7 @@ poetry add --dev pre-commit
 ```
 
 Then you will need a file `.pre-commit-config.yaml` in your project
-directory.
+root.
 Unfortunately, this tool does not integrate with `pyproject.toml`.
 Now fill it with the following content:
 
