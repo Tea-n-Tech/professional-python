@@ -5,6 +5,13 @@ Learn to code professional Python.
 
 TODO ...
 
+Requirements:
+
+- Python Basics
+- Git Basics
+- GitHub/GitLab/Bitbucket Basics
+- Linux/Windows Commandline Basics (Linux recommended)
+
 Topics:
 
 - [x] Package Management
