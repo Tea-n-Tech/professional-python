@@ -18,7 +18,7 @@ In your project directory root, you can find a hidden directory
 There is automatically a directory `.git/hooks` in which a bunch
 of scripts are located.
 Now open the script `pre-commit.sample`, edit delete all content
-except the first line and enter the linting command from the 
+except the first line and enter the linting command from the
 `Taskfile.yaml`.
 The content of the script will look like as follows:
 
