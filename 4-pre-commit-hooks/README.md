@@ -51,7 +51,47 @@ poetry add --dev pre-commit
 Then you will need a file `.pre-commit-config.yaml` in your project
 directory.
 Unfortunately, this tool does not integrate with `pyproject.toml`.
+Now fill it with the following content:
 
+```yaml
+repos:
+  - repo: local
+    hooks:
+      - id: python-linting
+        name: python-linting
+        entry: task lint
+        language: system
+        types: [python]
+```
+
+You can test if it works through the following command:
+
+```sh
+poetry run pre-commit run --all-files
+```
+
+To clean up, rename `.git/hooks/pre-commit` to
+`.git/hooks/pre-commit.sample` again.
+The hook is not installed yet.
+Let's first add the hooks install command to our `Taskfile.yaml`
+install command:
+
+```yaml
+# ...
+  install:
+    desc: Installs the dependencies.
+    cmds:
+      - poetry install
+      - poetry pre-commit install
+# ...
+```
+
+If we run `task install`, not only will we get all python
+dependencies but also the pre-commit hook will be installed.
+Very nice.
+Everytime you run `git commit ...` now our linter will run
+and this is avalable to every developer with an automated
+installation.
 
 ## More Material
 
