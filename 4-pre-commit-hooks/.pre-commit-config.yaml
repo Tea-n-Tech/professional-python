@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: python-linting
+        name: python-linting
+        entry: task lint
+        language: system
+        types: [python]
+        # pass_filenames: false
