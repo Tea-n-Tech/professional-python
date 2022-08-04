@@ -82,7 +82,7 @@ install command:
     desc: Installs the dependencies.
     cmds:
       - poetry install
-      - poetry pre-commit install
+      - poetry run pre-commit install
 # ...
 ```
 
