@@ -35,6 +35,24 @@ Congrats, you are done.
 The next time you will commit code with `git commit -m "..."`
 your linter will check your code automatically.
 
+## Distributing Pre-Commit Hooks
+
+Because your script lies within `.git/hooks`, you cannot commit it
+which means it is not shared among developers.
+This is a common issue and tools exist which can load the pre-commit
+script from another directory.
+We will go for `pre-commit` here, what a nice name.
+Do the usual and install the dev dependency:
+
+```sh
+poetry add --dev pre-commit
+```
+
+Then you will need a file `.pre-commit-config.yaml` in your project
+directory.
+Unfortunately, this tool does not integrate with `pyproject.toml`.
+
+
 ## More Material
 
 There is a [guide on hooks][hooks-guide] in case you search
