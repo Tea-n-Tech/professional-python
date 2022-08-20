@@ -33,16 +33,21 @@ Topics:
 - Lesson 7
   - [ ] Unit-Tests
 - Lesson 8
+  - [ ] Docs generation
+- Lesson 9
   - [ ] Changelog and commit messages
-- Lesosn 9
+- Lesosn 10
   - [ ] Pull Requests
-- Lesson 10
-  - [ ] Command Line Interfaces (CLI)
 - Lesson 11
-  - [ ] API
+  - [ ] Command Line Interfaces (CLI)
 - Lesson 12
-  - [ ] Docker
+  - [ ] API
 - Lesson 13
-  - [ ] Releases git-flow
+  - [ ] Docker
 - Lesson 14
+  - [ ] Releases git-flow
+- Lesson 15
   - [ ] Inbetween the lines
+
+- Lesson ?
+  - Side-Effects
