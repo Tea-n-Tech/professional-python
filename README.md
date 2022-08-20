@@ -24,7 +24,7 @@ Topics:
 - Lesson 3
   - [x] Gitignore
 - Lesson 4
-  - [ ] Licenses
+  - [x] Licenses
 - Lesson 5
   - [ ] Continuous Integration (CI)
   - [ ] GitHub Actions

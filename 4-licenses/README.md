@@ -95,7 +95,8 @@ poetry run mdb generate \
 ```
 
 And tada, we have our SBOM as a markdown file.
-Later on we will include this in our docs.
+Later on we will include this in our docs so if a supervisor or customer bugs
+us we can pinpoint them to the docs.
 Since we are lazy don't forget to add the respective commands to the
 `Taskfile.yaml`:
 
