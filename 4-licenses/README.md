@@ -88,7 +88,7 @@ Let's use it and store it under `docs/templates/sbom.md.jinja`:
 Now let's run `mdbom`:
 
 ```bash
-mdb generate \
+poetry run mdb generate \
     --input sbom.json \
     --output docs/sbom.md \
     --template docs/templates/sbom.md.jinja
@@ -100,12 +100,29 @@ Since we are lazy don't forget to add the respective commands to the
 `Taskfile.yaml`:
 
 ```yaml
+  sbom:
+    desc: Generate the Software Bill of Materials
+    cmds:
+      - |
+        # Make sure no file exists since cyclonedx-bom cannot overwrite
+        rm -f sbom.json
+        # Create the Software Bill of Materials as json
+        poetry run cyclonedx-bom \
+          --poetry \
+          --format json \
+          --output sbom.json
+        # Create the Software Bill of Materials as markdown
+        poetry run mdb generate \
+          --input sbom.json \
+          --output docs/sbom.md \
+          --template docs/templates/sbom.md.jinja
+        # Clean up
+        rm -f sbom.json
 
 ```
 
 Lastly let's add `sbom.json` and `sbom.md`to the gitignore, since
-they should later be part in the generated documentation but not
-the source code itself.
+we don't want to commit them with the source code itself.
 
 ```gitignore
 # ...
