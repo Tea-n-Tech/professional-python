@@ -45,7 +45,7 @@ why it is reasonable.
 
 ## Basic Setup and Testing
 
-A basic workflow from GitHub slightlu adapted looks as follows:
+A basic workflow from GitHub slightly adapted looks as follows:
 
 ```yaml
 # Workflow name displayed
@@ -102,16 +102,20 @@ jobs:
       # We need to fix the version instead of using latest and
       # we need to verify the SHA hash of the version to make
       # sure we got the right binary. Yes professional life
-      # sucks sometimes.
+      # sucks sometimes but breaking CI/CD sucks more.
       - name: Install Task
         # TODO
         run: |
           sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 
+      # Install pip as package manager just to be safe
+      - name: Install and upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+
       # Install dependencies through task
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
           ./bin/task setup
 
       # Run our linting
@@ -120,5 +124,13 @@ jobs:
           ./bin/task lint
 ```
 
-## Publishing
+## Improvements
 
+### Caching .venv
+
+If you run the pipeline multiple times you will recognize that
+`poetry install` will take very long which sucks for multiple
+reasons.
+To avoid this we can cache our poetry venv.
+
+## Publishing
