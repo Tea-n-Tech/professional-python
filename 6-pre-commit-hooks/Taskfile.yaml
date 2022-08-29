@@ -35,3 +35,8 @@ tasks:
           --template docs/templates/sbom.md.jinja
         # Clean up
         rm -f sbom.json
+
+  build:
+    desc: Builds the puthon package
+    cmds:
+      - poetry build
