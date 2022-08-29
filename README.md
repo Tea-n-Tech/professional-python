@@ -35,8 +35,8 @@ Create a python program to fetch and print weather data:
 - Lesson 4
   - [x] Licenses
 - Lesson 5
-  - [ ] Continuous Integration (CI)
-  - [ ] GitHub Actions
+  - [x] Continuous Integration (CI)
+  - [x] GitHub Actions
 - Lesson 6
   - [x] Pre-commit hooks
 - Lesson 7
@@ -45,18 +45,11 @@ Create a python program to fetch and print weather data:
   - [ ] Docs generation
 - Lesson 9
   - [ ] Changelog and commit messages
-- Lesosn 10
-  - [ ] Pull Requests
-- Lesson 11
+- Lesson 10
   - [ ] Command Line Interfaces (CLI)
+- Lesson 11
+  - [ ] Releases git-flow
 - Lesson 12
   - [ ] API
 - Lesson 13
   - [ ] Docker
-- Lesson 14
-  - [ ] Releases git-flow
-- Lesson 15
-  - [ ] Inbetween the lines
-
-- Lesson ?
-  - Side-Effects
