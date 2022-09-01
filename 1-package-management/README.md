@@ -4,6 +4,8 @@
 This tutorial explains how to create a python package which can be uploaded to
 [pypi].
 
+[pypi]: https://pypi.org/
+
 ## Package Managers
 
 There are multiple ways how to create and manage python packages.
@@ -26,18 +28,23 @@ connected.
 Environments and packages can be managed entirely or partially with the
 following solutions:
 
-- Conda Environments
-- Pipenv
-- Poetry
-- venv
+- [conda]
+- [pipenv]
+- [poetry]
+- [venv]
 - ...
 
 They all were created to manage certain aspects of a package and some can do
 more than others and some also rely on each other.
 To avoid a lengthy factual discussion, here is a direct and brief advice:
 
-- By default use poetry
-- Use conda if your package also depends on certain binaries (e.g. Intel MKL)
+- By default use [poetry]
+- Use [conda] if your package also depends on certain binaries (e.g. Intel MKL)
+
+[conda]: https://docs.conda.io/en/latest/
+[pipenv]: https://pipenv.pypa.io/en/latest/
+[poetry]: https://python-poetry.org/
+[venv]: https://docs.python.org/3/tutorial/venv.html
 
 ## Poetry
 
@@ -215,7 +222,7 @@ The python wheel (.whl) can be found in a folder `dist`
 including the source distribution (.tar.gz).
 These files need to be uploaded next.
 For the sake of professional development first upload to
-[test-pypi](https://test.pypi.org/) to test everything.
+[test-pypi] to test everything.
 Assuming you already have an account, run the following
 commands:
 
@@ -240,6 +247,4 @@ poetry publish --build
 
 Congratulations 🥳 your package manager is all set up.
 
-[pipenv]: https://github.com/pypa/pipenv
-[pypi]: https://pypi.org/
-[conda]: https://conda.io/
+[test-pypi]: https://test.pypi.org/
