@@ -21,6 +21,14 @@ Create a python program to fetch and print weather data:
 - Output the weather data to the console
 - As weather data choose temperature and/or rainwater
 
+Important
+
+- Do a [pull request][github-pr] to make your submission in your repo
+- Find someone to review your code (you can use our [discord])
+
+[github-pr]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
+[discord]: https://discord.gg/wEUHwtr8Pn
+
 ## Lessons
 
 - Lesson 1
