@@ -1,0 +1,260 @@
+name: Python Linting, Test and Upload
+
+# You can control when to trigger this workflow. You can
+# generally trigger on any push or pull request as shown
+# here but also other triggers based on time or specific
+# files or other events is possible.
+on: [push, pull_request]
+
+jobs:
+  # This job is called 'tests' as it runs the tests,
+  # so this is an arbitrary name.
+  tests:
+    # We run our workflow on ubuntu linux here.
+    # It is a popular system and stuff usually works well on it.
+    runs-on: ubuntu-latest
+
+    # This is a bit specific but it offers to run the tests
+    # for multiple python versions. After all we want to test
+    # usually not only the latest but also least supported
+    # version.
+    strategy:
+      # If either the tests for 3.7 or 3.10 fail all workflows
+      # are terminated to safe computing resources.
+      fail-fast: true
+      # Test matrix consists of two python versions. Usually
+      # latest and least supported are enough.
+      matrix:
+        python-version: ["3.7", "3.10"]
+
+    # Define workflow steps. Here the Party begins.
+    steps:
+      # This is an action from the action store.
+      # It uses git to clone and checkout our code from GitHub.
+      # Otherwise we would have to do it manually.
+      - uses: actions/checkout@v2
+
+      # This action installs python. Workflows have variables such as the python
+      # version from the matrix section. We use this variable to install the
+      # respective version here.
+      # As you can see actions may have inputs since they are basically something
+      # like a function. Inputs are denoted by 'with'.
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # We install task here since all our commands are already
+      # nicely available through it. Two things are important!
+      # We need to fix the version instead of using latest and
+      # we need to verify the SHA hash of the version to make
+      # sure we got the right binary. Yes professional life
+      # sucks sometimes.
+      - name: Install Task
+        # TODO
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+
+      # Installing dependencies with poetry is ... slow
+      # This action can cache our .venv folder which
+      # holds the poetry python env.
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      # Install pip as package manager just to be safe
+      - name: Install and upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+
+      # Install dependencies through task
+      - name: Install Dependencies
+        run: |
+          ./bin/task setup
+
+      # Run our linting
+      - name: Lint code
+        run: |
+          ./bin/task lint
+
+      # Run the unit tests
+      - name: Test code
+        run: |
+          ./bin/task test
+
+  # JOB
+  # This job publishes the package to test-pipy.
+  # You don't want to upload to pipy itself right away
+  # without a test. Helps during development.
+  test-publish:
+    # Will run after the job 'tests'
+    needs: [tests]
+
+    # Important, this job will run only if we tag the source
+    # code with `git tag -a X.X.X`.
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    # Jobs can have outputs for reuse. We want to reuse
+    # the version of the package.
+    outputs:
+      version: ${{ steps.extract_version.outputs.version }}
+
+    steps:
+      # Check out source code with this action again. You
+      # need to do this in every job.
+      - uses: actions/checkout@v2
+
+      # This is something more advanced but a step can have
+      # outputs which can be used in other steps.
+      # We extract from the toml file the version here
+      # and set it in a very very odd syntax as the output.
+      - name: Remember version
+        id: extract_version
+        run: |
+          VERSION=$(cat pyproject.toml | grep -oE -m 1 "version = \"(.*)\"" | cut -f2 -d '"')
+          echo "Version: $VERSION"
+          echo "::set-output name=version::$VERSION"
+
+      # For publishing just pick a python version
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      # Installing task ... again
+      - name: Install Task
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+
+      # Load our cached dependencies to speed things up.
+      # You will get more motivation for this extra stuff
+      # one you waited minutes.
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      # Install dependencies ... again
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          ./bin/task setup
+
+      # What the description says
+      - name: Build packages for release
+        run: |
+          ./bin/task build
+
+      # Here we actually upload to pipy. Poetry can do that on
+      # its own BUT we use the classic twine here.
+      # Why? Couse twine can skip existing which avoids any tries
+      # to upload multiple times.
+      - name: Publish distribution to Test PyPI
+        env:
+          TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+          TWINE_USERNAME: __token__
+          TWINE_NON_INTERACTIVE: 1
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        run: poetry run twine upload --skip-existing --verbose 'dist/*'
+
+  # JOB
+  # Yeah you thought we must be done at some point but you
+  # are wrong. Being professional is about a lot of extra
+  # rounds and not coding. Now we test if our package
+  # installation from test-pypi works. This is especially
+  # helpful if you have C-dependencies.
+  # It might look quite haunting to do this but I had
+  # dependencies break compatabilities etc in the past
+  # so this care comes from pain and suffering.
+  test-install:
+    # Of course run after test publish since we need it.
+    needs: [test-publish]
+
+    # Tag filter just to be safe.
+    if: startsWith(github.ref, 'refs/tags/')
+
+    # Stick with ubuntu
+    runs-on: ubuntu-latest
+
+    # Use the version from the previous job to install
+    # the correct package version. We could simply go for latest
+    # but in case of an unrecognized failure ... which happened
+    # you will simply install an old version here.
+    env:
+      VERSION: ${{ needs.test-publish.outputs.version }}
+
+    steps:
+      # Install python (be aware NO checkout action)
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      # Check if it installs without errors
+      - name: Install package
+        run: |
+          python -m pip install \
+            --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple \
+            chia-tea=="$VERSION"
+
+  # JOB
+  # Finally publish the code to pypi
+  publish:
+    # You should know by now what all of this does ...
+    needs: [test-install]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Install Task
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          ./bin/task setup
+
+      - name: Build packages for release
+        run: |
+          ./bin/task build
+
+      # Not required but this saves the distribution files
+      # with the package upload. You can also do this with
+      # e.g. log files etc. Can make debugging easier to have
+      # the real code available just to be sure.
+      - name: Save packages as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+
+      # Basically the same as for test-pypi but we upload here
+      # to pypi itself.
+      - name: Publish distribution to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_NON_INTERACTIVE: 1
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: poetry run twine upload --skip-existing --verbose 'dist/*'

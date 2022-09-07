@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "deathstar"
+version = "0.1.0"
+description = "This python package allows running the deathstar"
+authors = ["Lord Vader <darth.vader@galactic-empire.star>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7.2"
+rich = "^12.5.1"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.14.5"
+flake8 = "^5.0.3"
+black = "^22.6.0"
+mypy = "^0.971"
+cyclonedx-bom = "^3.5.0"
+mdbom = "^0.3.0"
+twine = "^4.0.1"
+pytest = "^7.1.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    # Disable missing module docstring since the information
+    # regarding functionality is provided with more than enough
+    # detail by the functions themselves
+    "missing-module-docstring"
+]
+
+[tool.flake8]
+# I have no clue why this is 10, maybe I ought to look it up
+max-complexity = 10
+# We allow longer lines since 80 is quite short
+max-line-length = 100
+
+[tool.black]
+# We allow longer lines since 80 is quite short
+line-length=100

@@ -1,0 +1,47 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Installs the dependencies.
+    cmds:
+      - poetry install
+
+  lint:
+    desc: Lints the code and reports on issues.
+    cmds:
+      - python3 -m poetry run black --check deathstar
+      - |
+        python3 -m poetry run flake8 deathstar \
+          --show-source \
+          --statistics \
+          --count
+      - python3 -m poetry run pylint deathstar
+
+  sbom:
+    desc: Generate the Software Bill of Materials
+    cmds:
+      - |
+        # Make sure no file exists since cyclonedx-bom cannot overwrite
+        rm -f sbom.json
+        # Create the Software Bill of Materials as json
+        poetry run cyclonedx-bom \
+          --poetry \
+          --format json \
+          --output sbom.json
+        # Create the Software Bill of Materials as markdown
+        poetry run mdb generate \
+          --input sbom.json \
+          --output docs/sbom.md \
+          --template docs/templates/sbom.md.jinja
+        # Clean up
+        rm -f sbom.json
+
+  build:
+    desc: Builds the puthon package
+    cmds:
+      - poetry build
+
+  test:
+    desc: Runs tests on the code
+    cmds:
+      - poetry run pytest
