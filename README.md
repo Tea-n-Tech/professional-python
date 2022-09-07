@@ -48,7 +48,7 @@ Important
 - Lesson 6
   - [x] Pre-commit hooks
 - Lesson 7
-  - [ ] Unit-Tests
+  - [x] Unit-Tests
 - Lesson 8
   - [ ] Docs generation
 - Lesson 9
