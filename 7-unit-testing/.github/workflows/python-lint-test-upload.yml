@@ -65,15 +65,15 @@ jobs:
           path: .venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
-      # Install pip as package manager just to be safe
-      - name: Install and upgrade pip
+      # Install pip and poetry
+      - name: Install and upgrade pip and poetry
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip poetry
 
       # Install dependencies through task
       - name: Install Dependencies
         run: |
-          ./bin/task setup
+          ./bin/task install
 
       # Run our linting
       - name: Lint code
@@ -118,7 +118,6 @@ jobs:
           VERSION=$(cat pyproject.toml | grep -oE -m 1 "version = \"(.*)\"" | cut -f2 -d '"')
           echo "Version: $VERSION"
           echo "::set-output name=version::$VERSION"
-
       # For publishing just pick a python version
       - name: Set up Python 3.10
         uses: actions/setup-python@v2
@@ -143,9 +142,8 @@ jobs:
       # Install dependencies ... again
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          ./bin/task setup
-
+          python -m pip install --upgrade pip poetry
+          ./bin/task install
       # What the description says
       - name: Build packages for release
         run: |
@@ -203,7 +201,6 @@ jobs:
             --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple \
             chia-tea=="$VERSION"
-
   # JOB
   # Finally publish the code to pypi
   publish:
@@ -223,6 +220,7 @@ jobs:
       - name: Install Task
         run: |
           sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+
       - name: Load cached venv
         id: cached-poetry-dependencies
         uses: actions/cache@v2
@@ -232,9 +230,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          ./bin/task setup
-
+          python -m pip install --upgrade poetry pip
+          ./bin/task install
       - name: Build packages for release
         run: |
           ./bin/task build

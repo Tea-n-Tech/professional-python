@@ -11,7 +11,7 @@ rich = "^12.5.1"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.14.5"
-flake8 = "^5.0.3"
+flake9 = "^3.8.3"
 black = "^22.6.0"
 mypy = "^0.971"
 
