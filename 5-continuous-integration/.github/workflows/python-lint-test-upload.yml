@@ -200,7 +200,7 @@ jobs:
           python -m pip install \
             --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple \
-            chia-tea=="$VERSION"
+            deathstar=="$VERSION"
   # JOB
   # Finally publish the code to pypi
   publish:
