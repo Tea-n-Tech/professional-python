@@ -146,13 +146,14 @@ IMPORTANT!
 
 - In unit-tests you should avoid testing functions deeper down in the callstack.
   This can lead to an enormous increase in scenarios.
-  Feel free to patch not only function calls, but also more complex functions
-  which you are calling.
+  Feel free to patch not only side-effect function calls, but also more complex
+  functions in the callstack.
 - In the last line we basically check the entire implementation.
   Avoid this if possible.
   We don't want a test to break just because someone changes the color.
   That would be too detailed.
-  Checking if it was called would suffice in this case.
+  Checking if it was called would suffice or just checking if a part of the
+  message is correct.
 
 There are other ways to use mocks.
 There is also [pytest monkeypatch][pytest-monkeypatch] which you could also use.
@@ -175,7 +176,7 @@ but also if it works.
 
 ## Pre-Commit Hook
 
-Also don't forget to add the tests to the pre-commit hook in
+Don't forget to add the tests to the pre-commit hook in
 `.pre-commit-config.yaml`.
 
 ```yaml

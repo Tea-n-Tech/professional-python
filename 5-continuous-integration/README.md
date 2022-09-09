@@ -109,14 +109,14 @@ jobs:
           sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 
       # Install pip as package manager just to be safe
-      - name: Install and upgrade pip
+      - name: Install and upgrade pip and poetry
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip poetry
 
       # Install dependencies through task
       - name: Install Dependencies
         run: |
-          ./bin/task setup
+          ./bin/task install
 
       # Run our linting
       - name: Lint code
@@ -155,7 +155,7 @@ Taskfile:
 # ...
 ```
 
-Now in the workflow file, BEFORE running `task setup` add the
+Now in the workflow file, BEFORE running `task install` add the
 following code:
 
 ```yaml
@@ -275,8 +275,8 @@ First create a new `job` in the workflow file as shown below:
       # Install dependencies ... again
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          ./bin/task setup
+          python -m pip install --upgrade pip poetry
+          ./bin/task install
 
       # What the description says
       - name: Build packages for release
@@ -404,7 +404,7 @@ Here is the `job` for the test installation:
           python -m pip install \
             --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple \
-            chia-tea=="$VERSION"
+            deathstar=="$VERSION"
 ```
 
 Note how we set `VERSION` with the version output from the
@@ -443,8 +443,8 @@ Now we are finally ready to publish our package:
 
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          ./bin/task setup
+          python -m pip install --upgrade pip poetry
+          ./bin/task install
 
       - name: Build packages for release
         run: |

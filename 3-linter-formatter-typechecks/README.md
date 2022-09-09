@@ -14,20 +14,20 @@ help you avoid technical debt and advice best practices.
 
 For linting we will use actually two linters here:
 
-- flake9
+- flake9 (flake8 with support for pyproject.toml)
 - pylint
 
 To add them as a development dependency but not a direct
 project dependecy we first run:
 
-`poetry add flake8 pylint --dev`
+`poetry add flake9 pylint --dev`
 
 which results in the following section in our `pyproject.toml`
 
 ```toml
 [tool.poetry.dev-dependencies]
 pylint = "^2.14.5"
-flake8 = "^5.0.3"
+flake9 = "^3.8.3"
 ```
 
 This is pretty neat as every developer will install also the
