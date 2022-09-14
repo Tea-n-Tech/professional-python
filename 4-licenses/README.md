@@ -12,7 +12,6 @@ Here is a rule of thumb:
 
 - All projects using the code should be public: [GNU GPLv3][gplv3]
 - Proprietary code: All Rights Reserved
-- Free but 
 - Free but mention me: [MIT License][mit-license]
 - Don't care and want to communicate that: [WTFPL]
 
