@@ -46,3 +46,13 @@ tasks:
     desc: Runs tests on the code
     cmds:
       - poetry run pytest
+
+  docs-serve:
+    desc: Serve the documentation locally
+    cmds:
+      - poetry run mkdocs serve
+
+  docs-publish:
+    desc: Publish the documentation to gh-pages
+    cmds:
+      - poetry run gh-deploy --force

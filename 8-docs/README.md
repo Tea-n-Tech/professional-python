@@ -24,6 +24,10 @@ Consider to use the following topics for your docs:
 If your project is in its early stages, not all parts will be necessary.
 With increasing progress though you should add piece by piece more information
 about your code.
+Always think first is there any need by someone to have this piece of
+documentation.
+Otherwise you will write a book about things which in the end no one ever
+needed and waste a lot of time.
 
 ### Architecture Decision Records (ADRs)
 
@@ -78,7 +82,7 @@ After you collect a few files, consider migrating to either Sphinx or Mkdocs.
 Both are capable and have a lot of plugins so there is no clear winner.
 Migrating to Mkdocs is a bit easier since it uses markdown for source files
 whereas Sphinx goes for reStructured Text (rst).
-In this course we will go with Mkdocs.
+In this course we will go with Mkdocs but feel free to make other choices.
 
 [markdown]: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 [mkdocs]: https://www.mkdocs.org/
@@ -130,3 +134,70 @@ nav:
   - Quick-Start: quick_start.md
   - FAQ: faq.md
 ```
+
+Now let's run mkdocs and look at the results:
+
+```bash
+poetry run mkdocs serve
+```
+
+And bam, we already got really nice docs.
+Before we tune this further, let's add automatic deployment.
+First we add additional commands to our `Taskfile.yml` so we don't have to
+remember anything:
+
+```yaml
+# ...
+
+  docs-serve:
+    desc: Serve the documentation locally
+    cmds:
+      - poetry run mkdocs serve
+
+  docs-publish:
+    desc: Publish the documentation to gh-pages
+    cmds:
+      - poetry run gh-deploy --force
+```
+
+Now add another step after publishing your package to the
+`.github/workflows/python-lint-test-upload.yml` file.
+
+```yaml
+# ...
+
+      # Basically the same as for test-pypi but we upload here
+      # to pypi itself.
+      - name: Publish distribution to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_NON_INTERACTIVE: 1
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: poetry run twine upload --skip-existing --verbose 'dist/*'
+
+      # Upload documentation to gh-pages
+      - name: Upload docs to the gh-pages branch
+        run: poetry run mkdocs gh-deploy --force
+```
+
+Okay cool ... but where does this actually deploy to?
+GitHub has a special branch called `gh-pages`.
+This branch is the branch to use for uploading static pages belonging to your
+repo.
+The branch DOES NOT contain the source code.
+It is a so called orphan branch, meaning it has no connection to the coding
+branches as it is just for docs.
+The site data contains a file `index.html` which will be rendered automatically
+by GitHub, so cool 😎
+
+### Source Map
+
+TODO
+
+### Coverage Report
+
+TODO
+
+### SBOM
+
+TODO
