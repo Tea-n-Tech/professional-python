@@ -64,6 +64,9 @@ A very compact but also quite complete one is [arc42].
 I highly recommend arc42 since it depicts very cleanly how to document a
 software including deployment.
 Be aware this takes time and effort.
+And also don't just follow any guide such as arc42 rigidly.
+Think about what makes sense to document and leave out the parts where no
+stakeholders have any benefit of.
 
 [arc42]: https://arc42.org/overview
 
@@ -76,8 +79,9 @@ In Python it usually comes down to three solutions.
 - [Sphinx]
 - [Mkdocs]
 
-In the beginning start with pure markdown.
-It is cheap, gets nicely displayed in repos and costs you nothing in effort.
+In the beginning, start with pure markdown.
+It is dirt cheap, gets nicely displayed in repos and costs you nothing in
+effort.
 After you collect a few files, consider migrating to either Sphinx or Mkdocs.
 Both are capable and have a lot of plugins so there is no clear winner.
 Migrating to Mkdocs is a bit easier since it uses markdown for source files
@@ -182,7 +186,7 @@ Now add another step after publishing your package to the
 
 Okay cool ... but where does this actually deploy to?
 GitHub has a special branch called `gh-pages`.
-This branch is the branch to use for uploading static pages belonging to your
+This branch is THE branch for uploading static pages belonging to your
 repo.
 The branch DOES NOT contain the source code.
 It is a so called orphan branch, meaning it has no connection to the coding
@@ -192,7 +196,67 @@ by GitHub, so cool 😎
 
 ### Source Map
 
-TODO
+In case we offer a library such as here, we need to document the public
+function interface.
+Therefor we need an additional package [`mkdocstrings[python]`][mkdocstrings].
+The feature flag `python` indicates that we want to document python code.
+Okay let's install the plugin:
+
+```python
+poetry add --dev mkdocstrings[python]
+```
+
+Now we register the plugin including the search plugin (should be installed by)
+default in the `mkdocs.yml`.
+
+```yaml
+# Some general page information
+site_name: Deathstar 💥
+site_url: https://Tea-n-Tech.github.io/deathstar/
+
+# We want to use the material theme
+theme:
+  name: material
+
+# The pages which you want to add
+nav:
+  - Home: index.md
+  - Quick-Start: quick_start.md
+  - FAQ: faq.md
+  - Source Code: source_code.md
+
+plugins:
+  - search
+  - mkdocstrings
+```
+
+As shown above we need to create a new source file `source_code.md` on which we
+document our public function interface.
+Let's document our function `laser` in it:
+
+```md
+# Source Code
+
+::: deathstar.laser
+```
+
+This is enough, now you should see really nicely documented code when running
+`task docs-serve` 💘
+
+As a note, we adapted the docstring from numpy docstring to google style
+docstring.
+
+```python
+def fire(planet: str):
+    """Fire the deathstar laser at a planet
+
+    Args:
+        planet : Name of the planet to obliterate.
+    """
+    rich.print(f"💥 Firing laster at [red]{planet}[/red]")
+```
+
+[mkdocstrings]: https://mkdocstrings.github.io/
 
 ### Coverage Report
 

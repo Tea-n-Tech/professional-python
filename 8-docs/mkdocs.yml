@@ -11,3 +11,8 @@ nav:
   - Home: index.md
   - Quick-Start: quick_start.md
   - FAQ: faq.md
+  - Source Code: source_code.md
+
+plugins:
+  - search
+  - mkdocstrings
