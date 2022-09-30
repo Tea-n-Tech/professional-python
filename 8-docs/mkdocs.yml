@@ -12,7 +12,9 @@ nav:
   - Quick-Start: quick_start.md
   - FAQ: faq.md
   - Source Code: source_code.md
+  - Coverage report: coverage.md
 
 plugins:
   - search
   - mkdocstrings
+  - coverage

@@ -260,7 +260,92 @@ def fire(planet: str):
 
 ### Coverage Report
 
-TODO
+We run tests now in our project but what we don't do is look at the test
+coverage.
+Coverage means how much of the code is covered by tests.
+Coverage is a tricky metric as there are different types such as branch
+coverage, line coverage etc.
+Note some teams set thresholds to trigger failing pipelines if the coverage is
+too low.
+
+Coverage is a neat thing but if you do things professionally it is a good 
+practice to document the code coverage.
+Thus we want to include this coverage report in our docs too.
+
+First modify `pytest` in our `Taskfile.yaml` to make a coverage report and
+output it as html:
+
+```yaml
+  test:
+    desc: Runs tests on the code
+    cmds:
+      - >
+        poetry run pytest
+        --cov=deathstar
+        --cov-report=html
+```
+
+This will create a folder `htmlcov` containing a very beautiful report.
+Now to include this report we need another mkdocs plugin called
+`mkdocs-coverage`.
+
+```bash
+poetry add --dev mkdocs-coverage
+```
+
+Next we modify our `mkdocs.yml` to use the plugin and use the generated report:
+
+```yaml
+# Some general page information
+site_name: Deathstar 💥
+site_url: https://Tea-n-Tech.github.io/deathstar/
+
+# We want to use the material theme
+theme:
+  name: material
+
+# The pages which you want to add
+nav:
+  - Home: index.md
+  - Quick-Start: quick_start.md
+  - FAQ: faq.md
+  - Source Code: source_code.md
+  - Coverage report: coverage.md
+
+plugins:
+  - search
+  - mkdocstrings
+  - coverage
+```
+
+When you run now `task docs-serve` you should see a page with a coverage report.
+Really nice!
+Lastly we should generate this coverage report everytime we build the docs.
+Therefor we need to make the command `task test` a dependency of
+`task docs-serve` in `Taskfile.yaml`.
+
+```yaml
+# ...
+  test:
+    desc: Runs tests on the code
+    cmds:
+      - >
+        poetry run pytest
+        --cov=deathstar
+        --cov-report=html
+
+  docs-serve:
+    desc: Serve the documentation locally
+    deps:
+      - test
+    cmds:
+      - poetry run mkdocs serve
+# ...
+```
+
+Now everytime we run `task docs-serve`, the command `task test` will
+automatically run first.
+So easy, we love you task ❤️
 
 ### SBOM
 

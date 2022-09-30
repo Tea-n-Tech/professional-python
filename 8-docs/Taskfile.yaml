@@ -45,14 +45,20 @@ tasks:
   test:
     desc: Runs tests on the code
     cmds:
-      - poetry run pytest
+      - >
+        poetry run pytest
+        --cov=deathstar
+        --cov-report=html
 
   docs-serve:
     desc: Serve the documentation locally
+    deps:
+      - test
     cmds:
       - poetry run mkdocs serve
 
   docs-publish:
     desc: Publish the documentation to gh-pages
     cmds:
-      - poetry run gh-deploy --force
+      - poetry run mkdocs build
+      - poetry run mkdocs gh-deploy --force
