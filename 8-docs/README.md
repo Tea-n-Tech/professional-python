@@ -349,4 +349,8 @@ So easy, we love you task ❤️
 
 ### SBOM
 
-TODO
+usually we would now also include our Software Bill of Material.
+Unfortunately at writing `mdbom` and `mkdocs-material` have a conflict
+regarding `jinja2`.
+
+You can find the issue [here](https://github.com/HaRo87/mdbom/issues/34).
