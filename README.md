@@ -50,7 +50,7 @@ Important
 - Lesson 7
   - [x] Unit-Tests
 - Lesson 8
-  - [ ] Docs generation
+  - [x] Docs generation
 - Lesson 9
   - [ ] Changelog and commit messages
 - Lesson 10
