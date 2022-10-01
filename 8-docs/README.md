@@ -181,7 +181,7 @@ Now add another step after publishing your package to the
 
       # Upload documentation to gh-pages
       - name: Upload docs to the gh-pages branch
-        run: poetry run mkdocs gh-deploy --force
+        run: task docs-publish
 ```
 
 Okay cool ... but where does this actually deploy to?

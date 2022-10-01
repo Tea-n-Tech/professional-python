@@ -1,0 +1,20 @@
+# Some general page information
+site_name: Deathstar 💥
+site_url: https://Tea-n-Tech.github.io/deathstar/
+
+# We want to use the material theme
+theme:
+  name: material
+
+# The pages which you want to add
+nav:
+  - Home: index.md
+  - Quick-Start: quick_start.md
+  - FAQ: faq.md
+  - Source Code: source_code.md
+  - Coverage report: coverage.md
+
+plugins:
+  - search
+  - mkdocstrings
+  - coverage
