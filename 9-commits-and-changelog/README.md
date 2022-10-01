@@ -12,7 +12,7 @@ beautifully concise commit messages to understand why you did what.
 ## Pull Request Merge Strategies
 
 How you should name your commits depends strongly on your PR merge strategy.
-On GitHub you can perform three kinds of merges:
+On GitHub you can perform [three kinds of merges][gh-merge-strategies]:
 
 1. Merge commit: Add all commits from the head branch to the base branch with a
    merge commit.
@@ -37,6 +37,8 @@ is it.
 *Rebase merging* as the name states applies all changes to the base branch and
 that's it. You will similarly to a normal merge retain everything that has
 happened within the PR.
+
+[gh-merge-strategies]: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github
 
 ### Which Strategy to Choose?
 
