@@ -52,9 +52,35 @@ These commit messages when adhering to a specific style can be parsed by certain
 tools to automatically create a changelog between versions.
 So useful 👀 Never write your changelogs manually.
 
-## Commit Message Style
+## Commit Messages
 
-TODO
+How thoroughly you follow commit messages depends on the context.
+As you noticed every commit must have a general message such as below:
+
+```bash
+git commit -m "this is the main message"
+```
+
+Commit messages can also be longer.
+In such a case this main message is the first line and below you can enter
+more details.
+In most corporate environments more details are rarely required since the teams
+know each other well enough.
+In an open-source project it is imperative that everyone knows what you did
+without being well-connected.
+Longer messages become more crucial as people are more disconnected.
+So writing a short list of the most important changes and why you did them
+bridges this disconnection.
+
+The first line should follow the following style:
+
+`category: brief message what you do`
+
+Common categories are:
+
+- `feat` for new features
+- `bug` for bugfixes
+- `ci` for changes to the continuous integration
 
 ## Changelog Generation
 
