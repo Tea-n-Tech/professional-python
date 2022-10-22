@@ -13,8 +13,12 @@ nav:
   - FAQ: faq.md
   - Source Code: source_code.md
   - Coverage report: coverage.md
+  - Changelog: changelog.md
 
 plugins:
   - search
   - mkdocstrings
   - coverage
+
+markdown_extensions:
+  - pymdownx.snippets

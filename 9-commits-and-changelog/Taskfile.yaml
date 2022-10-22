@@ -54,11 +54,20 @@ tasks:
     desc: Serve the documentation locally
     deps:
       - test
+      - generate-changelog
     cmds:
       - poetry run mkdocs serve
 
   docs-publish:
     desc: Publish the documentation to gh-pages
+    deps:
+      - test
+      - generate-changelog
     cmds:
       - poetry run mkdocs build
       - poetry run mkdocs gh-deploy --force
+
+  generate-changelog:
+    desc: Generates the changelog
+    cmds:
+      - poetry run git-changelog --output CHANGELOG.md .

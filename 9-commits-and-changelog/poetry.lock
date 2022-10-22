@@ -244,6 +244,18 @@ python-dateutil = ">=2.8.1"
 dev = ["wheel", "flake8", "markdown", "twine"]
 
 [[package]]
+name = "git-changelog"
+version = "0.5.0"
+description = "Automatic Changelog generator using Jinja2 templates."
+category = "dev"
+optional = false
+python-versions = ">=3.6.2"
+
+[package.dependencies]
+Jinja2 = ">=2.10,<4"
+semver = ">=2.13,<3.0"
+
+[[package]]
 name = "griffe"
 version = "0.22.2"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
@@ -854,6 +866,14 @@ cryptography = ">=2.0"
 jeepney = ">=0.6"
 
 [[package]]
+name = "semver"
+version = "2.13.0"
+description = "Python helper for Semantic Versioning (http://semver.org/)"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -983,7 +1003,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7.2"
-content-hash = "c8b04d1f7b612e19d3e57359699029d3d1ced9d3a304573b17914931a53a5d1c"
+content-hash = "01ad822b2161d8d9550c81bd14a1a5573979c420cc6e18177d2d6a7dbc8edfd9"
 
 [metadata.files]
 astroid = [
@@ -1212,6 +1232,10 @@ flake9 = [
 ghp-import = [
     {file = "ghp-import-2.1.0.tar.gz", hash = "sha256:9c535c4c61193c2df8871222567d7fd7e5014d835f97dc7b7439069e2413d343"},
     {file = "ghp_import-2.1.0-py3-none-any.whl", hash = "sha256:8337dd7b50877f163d4c0289bc1f1c7f127550241988d568c1db512c4324a619"},
+]
+git-changelog = [
+    {file = "git-changelog-0.5.0.tar.gz", hash = "sha256:6a1b43d21edb2b42e6c21250de97761602ff01deb8f139c84ba1b11cc591bd92"},
+    {file = "git_changelog-0.5.0-py3-none-any.whl", hash = "sha256:ca7fd3371dd6918c6c19202bbccadc59030da48a5fe350601f15fc5c36c1431a"},
 ]
 griffe = [
     {file = "griffe-0.22.2-py3-none-any.whl", hash = "sha256:cea5415ac6a92f4a22638e3f1f2e661402bac09fb8e8266936d67185a7e0d0fb"},
@@ -1533,6 +1557,10 @@ rich = [
 secretstorage = [
     {file = "SecretStorage-3.3.3-py3-none-any.whl", hash = "sha256:f356e6628222568e3af06f2eba8df495efa13b3b63081dafd4f7d9a7b7bc9f99"},
     {file = "SecretStorage-3.3.3.tar.gz", hash = "sha256:2403533ef369eca6d2ba81718576c5e0f564d5cca1b58f73a8b23e7d4eeebd77"},
+]
+semver = [
+    {file = "semver-2.13.0-py2.py3-none-any.whl", hash = "sha256:ced8b23dceb22134307c1b8abfa523da14198793d9787ac838e70e29e77458d4"},
+    {file = "semver-2.13.0.tar.gz", hash = "sha256:fa0fe2722ee1c3f57eac478820c3a5ae2f624af8264cbdf9000c980ff7f75e3f"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},

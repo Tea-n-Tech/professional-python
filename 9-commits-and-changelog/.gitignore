@@ -145,3 +145,7 @@ cov_html
 
 # ignore sbom file
 sbom.json
+
+# no dynamically generated changelog
+# it will be part of the docs on the gh-pages branch
+CHANGELOG.md

@@ -52,7 +52,7 @@ Important
 - Lesson 8
   - [x] Docs generation
 - Lesson 9
-  - [ ] Changelog and commit messages
+  - [x] Changelog and commit messages
 - Lesson 10
   - [ ] Command Line Interfaces (CLI)
 - Lesson 11
