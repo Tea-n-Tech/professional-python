@@ -72,7 +72,7 @@ Focus points:
 - Lesson 9
   - [x] Changelog and commit messages
 - Lesson 10
-  - [ ] Command Line Interfaces (CLI)
+  - [x] Command Line Interfaces (CLI)
 - Lesson 11
   - [ ] Releases git-flow
 - Lesson 12
