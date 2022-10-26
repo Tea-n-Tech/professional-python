@@ -7,4 +7,4 @@ def fire(planet: str):
     Args:
         planet : Name of the planet to obliterate.
     """
-    rich.print(f"💥 Firing laster at [red]{planet}[/red]")
+    rich.print(f"💥 Firing laser at [red]{planet}[/red]")

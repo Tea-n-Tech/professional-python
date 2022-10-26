@@ -12,4 +12,4 @@ class TestLaser:
         fire("Alderaan")
 
         assert rich_mock.print.called
-        rich_mock.print.assert_called_once_with("💥 Firing laster at [red]Alderaan[/red]")
+        rich_mock.print.assert_called_once_with("💥 Firing laser at [red]Alderaan[/red]")

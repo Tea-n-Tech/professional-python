@@ -5,9 +5,13 @@ description = "This python package allows running the deathstar"
 authors = ["Lord Vader <darth.vader@galactic-empire.star>"]
 license = "MIT"
 
+[tool.poetry.scripts]
+deathstar = "deathstar.cli.main:app"
+
 [tool.poetry.dependencies]
 python = "^3.7.2"
 rich = "^12.5.1"
+typer = {extras = ["all"], version = "^0.6.1"}
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.14.5"
