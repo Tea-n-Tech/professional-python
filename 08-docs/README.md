@@ -161,7 +161,7 @@ remember anything:
   docs-publish:
     desc: Publish the documentation to gh-pages
     cmds:
-      - poetry run gh-deploy --force
+      - poetry run mkdocs gh-deploy --force
 ```
 
 Now add another step after publishing your package to the
