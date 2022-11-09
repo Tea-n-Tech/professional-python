@@ -64,7 +64,7 @@ Focus points:
   - [x] Continuous Integration (CI)
   - [x] GitHub Actions
 - Lesson 6
-  - [x] Pre-commit hooks
+  - [x] ~~Pre-commit hooks~~ (optional)
 - Lesson 7
   - [x] Unit-Tests
 - Lesson 8
@@ -74,7 +74,7 @@ Focus points:
 - Lesson 10
   - [x] Command Line Interfaces (CLI)
 - Lesson 11
-  - [ ] Releases git-flow
+  - [x] Releases git-flow
 - Lesson 12
   - [ ] API
 - Lesson 13
