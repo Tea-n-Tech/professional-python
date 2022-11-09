@@ -47,6 +47,32 @@ Focus points:
 - End-users will use your program so focus on usability
 - Integrate previous lessons as much as it makes sense
 
+### Task 3 - API (Work in Progress)
+
+This task will be an advancement of the previous one by wrapping the
+functionality in an API.
+Create an API with the following routes:
+
+- GET `/health/ping` to check if the API is up (can be unauthenticated)
+- Require a GitHub token as authentication header and use this token for
+  your API calls to GitHub within your API
+- GET `/user` to get details about the currently authenticated user
+- GET `/user/stars` to retrieve the amount of GitHub stars of all repos from the
+  authenticated user
+- GET `/user/{username}` to get data about the specified user
+- GET `/user/{username}/stars` to get the amount of total stars from all repos
+  of the specified user
+- GET `/user/status` to get the current status of the authenticated user (see
+  task 2)
+- POST `/user/status/tea` to set the users status to drinking tea (see task 2)
+
+What is important?
+
+- Document your API endpoints (hint: if you do this right, it is done
+  automatically)
+- The API needs to be wrapped and published as a docker image
+- Add a task command to start the docker image (makes life easier)
+
 ## Lessons
 
 - Lesson 1
