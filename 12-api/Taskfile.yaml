@@ -50,6 +50,11 @@ tasks:
         --cov=deathstar
         --cov-report=html
 
+  api:
+    desc: Run the API server
+    cmds:
+      - poetry run deathstar api
+
   docs-serve:
     desc: Serve the documentation locally
     deps:

@@ -240,12 +240,165 @@ if you don't need it.
 
 Let's get finally to business.
 As expected, there are a lot of frameworks.
-The most famous once are probably FastAPI and Flask.
+The most famous ones are probably [FastAPI] and [Flask].
 Having used both, I can generally recommend FastAPI.
-You will have a great experience with it, it is quite fast for a Python API
-and the comfort of using it is just beyond good.
+You will have a great experience with it.
+It is quite fast for a Python API and the comfort of using it is very very good.
+So lets install it:
 
-TODO
+```bash
+poetry add fastapi uvicorn[standard]
+```
+
+Note that we build the API with FastAPI but it will be served by [uvicorn].
+Before we can interact with our data we need some first.
+Data is never held inside the API (stateless!) but within a database.
+Nonetheless this is a tutorial so lets fake a real database.
+To do this we create a file `deathstar/database.py`:
+
+```python
+from abc import ABC
+from typing import Dict, Union
+from pydantic import BaseModel
+
+
+class Planet(BaseModel):
+    """Class with information about the planet"""
+
+    name: str
+
+
+class PlanetDatabase(ABC):
+    """This class represents a generic planet database interface"""
+
+    async def get_planet(self, name: str) -> Union[Planet, None]:
+        """Get a planet from the database
+
+        Args:
+            name: Name of the planet to retrieve
+        """
+        raise NotImplementedError()
+
+    async def remove_planet(self, name: str) -> bool:
+        """Removes a planet from the database
+
+        Args:
+            name: Name of the planet to remove
+        """
+        raise NotImplementedError()
+
+
+class FakePlanetDatabase(PlanetDatabase):
+    planets: Dict[str, Planet]
+
+    def __init__(self):
+        # Create fake data
+        self.planets = {
+            "alderaan": Planet(name="Alderaan"),
+            "tatooine": Planet(name="Tatooine"),
+            "naboo": Planet(name="Naboo"),
+            "tython": Planet(name="Tython"),
+            "dantooine": Planet(name="Dantooine"),
+            "yavin4": Planet(name="Yavin4"),
+        }
+
+    async def get_planet(self, name: str) -> Union[Planet, None]:
+        return self.planets.get(name.lower())
+
+    async def remove_planet(self, name: str) -> bool:
+        name = name.lower()
+        if name in self.planets:
+            self.planets.pop(name)
+            return True
+
+        return False
+```
+
+Be aware of a few explicit things:
+
+- We define a generic interface description with `abc.ABC` to make sure
+  we abstract away the concrete implementation underneath.
+  With this we could easily add a real database interface underneath.
+- We use `pydantic.BaseModel` to define the `Planet` class.
+  `pydantic` comes along with `fastapi` and helps to serialize or deserialize
+  the class instances so we can simply return them in the API as you will see
+  later.
+- Recognize how we return a `bool` if a planet was removed in case of
+  success or how we return `None` if a planet did not exist.
+  This is important since you will see later a resource is not found, which
+  is a planet here, we will notify the user with a HTTP 404 (Not Found).
+
+Now it is API time baby, lets create a file `deathstar/api.py` with the
+following content:
+
+```python
+from fastapi import FastAPI, HTTPException, status
+
+from .database import FakePlanetDatabase, Planet
+
+
+app = FastAPI()
+db = FakePlanetDatabase()
+
+
+@app.delete("/api/v1/planets/{target}", status_code=status.HTTP_204_NO_CONTENT)
+async def destroy_planet(target: str):
+    """Shoot a laser at a planet
+
+    Args:
+        target: Planet name to destroy
+    """
+    success = await db.remove_planet(target)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Planet {target} does not exist",
+        )
+
+
+@app.get("/api/v1/planets/{name}", response_model=Planet)
+async def get_planet(name: str) -> Planet:
+    """Get info about a planet
+
+    Args:
+        name: Name of the planet
+    """
+    planet = await db.get_planet(name)
+    if planet is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Planet {name} does not exist",
+        )
+
+    return planet
+```
+
+Again here are a few important things to realize:
+
+- The basic route is `api/v1` which allows us to revamp our api entirely
+  under a new version without breaking other peoples systems who interfaced
+  us.
+- We use `DELETE` method for destroying a planet.
+  If the planet is not found we return a classic 404 and in case of success
+  it is a 204 (No Content) since we don't have anything to say.
+- The route resource type is the planet name.
+  Imagine for destroying a planet we could also make a `POST` method on
+  for example `/api/v1/planets/{target}/destroy` but this feels a lot less
+  natural than the current solution.
+- When retrieving a planet we define `response_model=Planet` which allows us to
+  simply perform `return planet` without having to convert the class manually
+  into a proper response type such as JSON.
+  Really Sweet.
+- All functions so far were defined `async` which roughly put allows things to
+  run more efficiently in parallel (I most definitely won't go into this but
+  parallelization and Python including the GIL are a huge topic on its own).
+  Different threads could basically then handle multiple requests in parallel
+  (I feel very bad having to put it like that cause in Detail things don't go
+  exactly like that).
+
+[fastapi]: https://fastapi.tiangolo.com/
+[flask]: https://flask.palletsprojects.com/
+[uvicorn]: https://www.uvicorn.org/
 
 ## Performance
 
