@@ -102,6 +102,6 @@ What is important?
 - Lesson 11
   - [x] Releases git-flow
 - Lesson 12
-  - [ ] API
+  - [x] API
 - Lesson 13
   - [ ] Docker

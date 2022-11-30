@@ -246,7 +246,7 @@ You will have a great experience with it.
 It is quite fast for a Python API and the comfort of using it is very very good.
 So lets install it:
 
-```bash
+```console
 poetry add fastapi uvicorn[standard]
 ```
 
@@ -380,11 +380,11 @@ Again here are a few important things to realize:
   us.
 - We use `DELETE` method for destroying a planet.
   If the planet is not found we return a classic 404 and in case of success
-  it is a 204 (No Content) since we don't have anything to say.
+  it is a 204 (No Content) since destroying a planet speaks for itself.
 - The route resource type is the planet name.
   Imagine for destroying a planet we could also make a `POST` method on
-  for example `/api/v1/planets/{target}/destroy` but this feels a lot less
-  natural than the current solution.
+  for example `/api/v1/planets/{target}/destroy` but this is bad practice since
+  the route should describe a resource or be close to it.
 - When retrieving a planet we define `response_model=Planet` which allows us to
   simply perform `return planet` without having to convert the class manually
   into a proper response type such as JSON.
@@ -399,6 +399,167 @@ Again here are a few important things to realize:
 [fastapi]: https://fastapi.tiangolo.com/
 [flask]: https://flask.palletsprojects.com/
 [uvicorn]: https://www.uvicorn.org/
+
+## Running the Code
+
+To run the API we could use a `main` in a module file but we already have a cli.
+So it makes sense to add another cli command to start the api.
+For complex API servers it is common to write a cli either eating flags such
+as port number of for more complex cases consuming a server config file usually
+written in yaml.
+Therefore we add a file `deathstar/cli/api.py` with the following content:
+
+```python
+import typer
+import uvicorn
+
+from ..api import app
+
+api_cmd = typer.Typer(name="api", invoke_without_command=True)
+
+
+@api_cmd.callback()
+def run_api(host: str = "0.0.0.0", port: int = 8080):
+    """Starts the API server"""
+    uvicorn.run(app=app, host=host, port=port)
+```
+
+Now we can run our API with `poetry run deathstar api` but to remember that
+command we add it to our `Taskfile.yaml`:
+
+```yaml
+# ...
+
+  api:
+    desc: Run the API server
+    cmds:
+      - poetry run deathstar api
+
+# ...
+```
+
+Now we can do `task api` to run our API server.
+Doing so yields the following output:
+
+```console
+task api
+task: [api] poetry run deathstar api
+INFO:     Started server process [29334]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+```
+
+Really nice!
+
+## Manual Testing
+
+We've all been there that we needed to test an endpoint manually.
+Even if it is just for figuring out how something works.
+There are a lot of tools to perform HTTP requests.
+[Postman], [HTTPie] and many more.
+Your best friend on Linux will still be `curl`.
+Why?
+Since it is available everywhere and even if you won't use it to probe APIs
+then you will use it somewhere when automating processes in a script.
+Thus I will go with `curl` here but fele free to choose any tool you like for
+the following step.
+Now let's run our API with `task api` and try a query:
+
+```console
+$ curl localhost:8080/api/v1/planets/alderaan
+{"name":"Alderaan"}
+```
+
+Looks good.
+Let's try an unknown planet and use the verbose flag to see more details:
+
+```console
+$ curl -v localhost:8080/api/v1/planets/123
+*   Trying 127.0.0.1:8080...
+* Connected to localhost (127.0.0.1) port 8080 (#0)
+> GET /api/v1/planets/123 HTTP/1.1
+> Host: localhost:8080
+> User-Agent: curl/7.81.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 404 Not Found
+< date: Wed, 30 Nov 2022 21:12:13 GMT
+< server: uvicorn
+< content-length: 38
+< content-type: application/json
+< 
+* Connection #0 to host localhost left intact
+{"detail":"Planet 123 does not exist"}%   
+```
+
+Sweet.
+We get a 404 and a reasonable error message.
+Trust me how important good API error messages are.
+Everyone encounters at least once in a lifetime one of those APIs who just
+return a 400 (Bad Request) when perform a complex query and you have no clue
+what to fix.
+
+[Postman]: https://www.postman.com/downloads/
+[HTTPie]: https://httpie.io/
+
+## Integration Testing
+
+You have been using unit-tests so far.
+Another testing type you should know or at least know by name is integration
+tests.
+To put it simple, this test just runs API requests against the API and checks
+if the responses are sound.
+They can be performed in any way, through a Python script itself but also
+through `curl`.
+We don't perform integration tests here since this is just too small code.
+If things get bigger though it makes sense to create some.
+
+## OpenAPI Specs
+
+FastAPI is amazing since it creates a route `localhost:8080/docs` which
+renders the API specs.
+Originally if you write API specs, this is done in OpenAPI which is a yaml
+file format to describe an API.
+FastAPI can generate this automatically from the code and render it as docs
+page.
+From the docs you can run queries!
+Such a useful thing to have, for users and development.
+Check it out.
+
+## The Road to HTTPS
+
+Our API runs solely in http as you noticed.
+How do we run it with HTTPS now?
+You could get certificates either through a company or
+[let's encrypt][lets-encrypt] and incorporate them into the API directly but
+this is not recommended.
+Usually your API will be behind a so called ingress controller or load balancer
+anyway.
+This ingress controller can be configured with HTTPS so that they take care of
+it.
+The most typical solution for this is of course [NGINX].
+It is incredibly powerful but simple too.
+The Let's encrypt bot also works with nginx as described
+[here][nginx-lets-encrypt].
+Be aware another solution relies on the classic Apache HTTP server but NGINX
+is definitely a better choice.
+
+Configuring ingress with NGINX and with HTTPS is a delicate but helpful thing.
+At your job you will work a lot with certificates so any kind of exercise is
+recommended.
+Simply buy a RaspberryPi or rent a cheap little server and deploy a real Python
+API.
+For a toy server I can recommend [Strato](strato.de/) but it is a german
+provider.
+Cheap servers [cost around 6 Euro a month][strato-offer] with unlimited network,
+100MBit Bandwidth, 400GB SSD and 2 vCPU (2022) but you need to rent it for at
+least two months.
+
+[NGINX]: https://www.nginx.com/
+[nginx-lets-encrypt]: https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/
+[strato-offer]: https://www.strato.de/server/linux-vserver/
 
 ## Performance
 
