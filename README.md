@@ -47,7 +47,7 @@ Focus points:
 - End-users will use your program so focus on usability
 - Integrate previous lessons as much as it makes sense
 
-### Task 3 - API (Work in Progress)
+### Task 3 - API
 
 This task will be an advancement of the previous one by wrapping the
 functionality in an API.
@@ -64,7 +64,7 @@ Create an API with the following routes:
   of the specified user
 - GET `/user/status` to get the current status of the authenticated user (see
   task 2)
-- POST `/user/status/tea` to set the users status to drinking tea (see task 2)
+- POST `/user/status` to set the users status to drinking tea (see task 2)
 
 What is important?
 

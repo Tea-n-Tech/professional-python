@@ -516,17 +516,65 @@ through `curl`.
 We don't perform integration tests here since this is just too small code.
 If things get bigger though it makes sense to create some.
 
-## OpenAPI Specs
+## Documentation and OpenAPI Specs
 
 FastAPI is amazing since it creates a route `localhost:8080/docs` which
 renders the API specs.
-Originally if you write API specs, this is done in OpenAPI which is a yaml
-file format to describe an API.
+Originally if you write API specs, this is done in OpenAPI which is a json/yaml
+file format to describe an API (see `localhost:8080/openapi.json`).
 FastAPI can generate this automatically from the code and render it as docs
 page.
 From the docs you can run queries!
 Such a useful thing to have, for users and development.
 Check it out.
+
+## Authentication and Authorization
+
+This topic is a bomb, that is why we won't try it out here.
+Authentication means whether someone is allowed to use something (login) and
+authorization means whether someone has an access attribute which allows
+them to access certain data (e.g. data about a private GitHub repo).
+
+Authorization is performed by either username and password or more common
+through an API token.
+Tokens are better since they have limited scopes and can be revoked or have a
+limited lifetime in multiple ways.
+When performing a request with authorization, this information is most commonly
+put into the request header.
+Usually the key of the field is `Authorization` (wow who would have thought)
+and the value is `<type> <token>` where type is one of the following:
+
+- Basic (base64-encoded credentials such as passwords)
+- Bearer (more common, a token to access OAuth 2.0-protected resources)
+- Digest (based on SHA-256)
+- ...
+
+You most commonly will encounter `Bearer` or maybe sometimes even `Basic`.
+A typical header would then look for example as follows:
+
+```text
+Authorization: Bearer f8f7929hf2gh114
+```
+
+How the hell do we get this into our Python app?
+Usually you do this through a so called middleware.
+Users, similar to the GitHub API, authenticate once with often username and
+password to retrieve an API token.
+This token is then used for other requests.
+The reason why this is not fun is we need at least something to validate
+username and password and if we are lucky also something handling the tokens.
+And that is exactly the point where a billion solutions unfold which are very
+diverse in the API universe.
+You can use a vanilla LDAP to authenticate users for example but then you still
+need to handle the tokens.
+Another solution is to go with an external solution such as 1Password or AzureAD
+which often have integrations for FastAPI.
+Nonetheless they often do their own thing underneath so it is hard to give a
+general guide to this.
+You will most definitely hate it but enjoy the pain.
+If your company is low on engineering money, go with an external Provider.
+They are very safe, know what they do, price is often reasonable and you will
+save a lot of engineering and nerves.
 
 ## The Road to HTTPS
 
@@ -560,6 +608,16 @@ least two months.
 [NGINX]: https://www.nginx.com/
 [nginx-lets-encrypt]: https://www.nginx.com/blog/using-free-ssltls-certificates-from-lets-encrypt-with-nginx/
 [strato-offer]: https://www.strato.de/server/linux-vserver/
+
+## Note on APIs
+
+As you may realize APIs are an extremely broad topic.
+We tried to touch the important aspects here.
+Nonetheless you will need a lot of excercise to really master them.
+After getting better now in Python see this as another topic to face.
+If you really want to get deeper into programming to get better jobs I can
+also recommend to do this in another language such as golang after
+toying around in Python for a while.
 
 ## Performance
 
