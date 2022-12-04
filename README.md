@@ -59,12 +59,12 @@ Create an API with the following routes:
 - GET `/user` to get details about the currently authenticated user
 - GET `/user/stars` to retrieve the amount of GitHub stars of all repos from the
   authenticated user
-- GET `/user/{username}` to get data about the specified user
-- GET `/user/{username}/stars` to get the amount of total stars from all repos
-  of the specified user
 - GET `/user/status` to get the current status of the authenticated user (see
   task 2)
 - POST `/user/status` to set the users status to drinking tea (see task 2)
+- GET `/users/{username}` to get data about the specified user
+- GET `/users/{username}/stars` to get the amount of total stars from all repos
+  of the specified user
 
 What is important?
 
