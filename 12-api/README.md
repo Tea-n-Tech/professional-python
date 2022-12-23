@@ -140,7 +140,8 @@ Some of the most important codes are:
 - 4XX
   - 400 Bad Request (client sent a malformed request)
   - 401 Unauthorized (this fellow will haunt you)
-  - 403 Forbidden (another friend you will see often)
+  - 403 Forbidden (another friend you will see often
+  - 404 Not found 
   - 418 I'm a teapot
   - ... a lot more but you will meet them eventually
 - 5XX
