@@ -1,0 +1,84 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Installs the dependencies.
+    cmds:
+      - poetry install
+      # Optional topic this disabled
+      # - poetry run pre-commit install
+
+  lint:
+    desc: Lints the code and reports on issues.
+    cmds:
+      - python3 -m poetry run black --check deathstar
+      - |
+        python3 -m poetry run flake8 deathstar \
+          --show-source \
+          --statistics \
+          --count
+      - python3 -m poetry run pylint deathstar
+
+  sbom:
+    desc: Generate the Software Bill of Materials
+    cmds:
+      - |
+        # Make sure no file exists since cyclonedx-bom cannot overwrite
+        rm -f sbom.json
+        # Create the Software Bill of Materials as json
+        poetry run cyclonedx-bom \
+          --poetry \
+          --format json \
+          --output sbom.json
+        # Create the Software Bill of Materials as markdown
+        poetry run mdb generate \
+          --input sbom.json \
+          --output docs/sbom.md \
+          --template docs/templates/sbom.md.jinja
+        # Clean up
+        rm -f sbom.json
+
+  build:
+    desc: Builds the puthon package
+    cmds:
+      - poetry build
+
+  test:
+    desc: Runs tests on the code
+    cmds:
+      - >
+        poetry run pytest
+        --cov=deathstar
+        --cov-report=html
+
+  api:
+    desc: Run the API server
+    cmds:
+      - poetry run deathstar api
+
+  docs-serve:
+    desc: Serve the documentation locally
+    deps:
+      - test
+      - generate-changelog
+    cmds:
+      - poetry run mkdocs serve
+
+  docs-publish:
+    desc: Publish the documentation to gh-pages
+    deps:
+      - test
+      - generate-changelog
+    cmds:
+      - poetry run mkdocs build
+      - poetry run mkdocs gh-deploy --force
+
+  generate-changelog:
+    desc: Generates the changelog
+    cmds:
+      - poetry run git-changelog --output CHANGELOG.md .
+
+  docker:build:
+    desc: Build the docker image
+    cmds:
+      - docker build -f Dockerfile .
