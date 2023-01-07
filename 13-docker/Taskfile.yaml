@@ -1,5 +1,8 @@
 version: "3"
 
+env:
+  DOCKER_IMAGE_NAME: ghcr.io/deathstar
+
 tasks:
   install:
     desc: Installs the dependencies.
@@ -81,4 +84,14 @@ tasks:
   docker:build:
     desc: Build the docker image
     cmds:
-      - docker build -f Dockerfile .
+      - docker build -f Dockerfile -t "${DOCKER_IMAGE_NAME}:latest" .
+
+  docker:run:
+    desc: Run the docker image api
+    cmds:
+      - docker run -p 8080:8080 "${DOCKER_IMAGE_NAME}:latest"
+
+  docker:upload:
+    desc: Upload the docker image to GitHub
+    cmds:
+      - pewpew

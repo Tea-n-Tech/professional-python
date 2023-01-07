@@ -40,3 +40,5 @@ WORKDIR /app
 # Now copy our final wheel from the builder here and install it cleanly.
 COPY --from=builder /app/dist/*.whl .
 RUN python -m pip install *.whl
+
+ENTRYPOINT [ "deathstar", "api" ]
