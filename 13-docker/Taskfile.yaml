@@ -1,7 +1,10 @@
 version: "3"
 
 env:
-  DOCKER_IMAGE_NAME: ghcr.io/deathstar
+  DOCKER_REGISTRY: ghcr.io
+  DOCKER_OWNER: tea-n-tech
+  DOCKER_IMAGE_NAME: deathstar
+  DOCKER_IMAGE_VERSION: latest
 
 tasks:
   install:
@@ -84,14 +87,23 @@ tasks:
   docker:build:
     desc: Build the docker image
     cmds:
-      - docker build -f Dockerfile -t "${DOCKER_IMAGE_NAME}:latest" .
+      - >
+        docker build
+        -f Dockerfile
+        -t "${DOCKER_REGISTRY}/${DOCKER_OWNER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
+        .
 
   docker:run:
     desc: Run the docker image api
     cmds:
-      - docker run -p 8080:8080 "${DOCKER_IMAGE_NAME}:latest"
+      - >
+        docker run
+        -p 8080:8080
+        "${DOCKER_REGISTRY}/${DOCKER_OWNER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
 
   docker:upload:
     desc: Upload the docker image to GitHub
     cmds:
-      - pewpew
+      - >
+        docker push
+        "${DOCKER_REGISTRY}/${DOCKER_OWNER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
